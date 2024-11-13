@@ -16,7 +16,6 @@ public class Util {
     // Статические переменные для хранения соединений
     private static Connection connection;
     private static SessionFactory sessionFactory;
-    private static Session session;
 
     // реализуйте настройку соединения с БД
     public static Connection getConnection() {
@@ -40,10 +39,10 @@ public class Util {
         }
     }
 
-    public static SessionFactory getSessionFactory() {
+    private static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             Configuration config = new Configuration();
-            config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+            config.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
             config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
             config.setProperty("hibernate.connection.url", URL);
             config.setProperty("hibernate.connection.username", USERNAME);
@@ -59,20 +58,10 @@ public class Util {
     }
 
     public static Session getSession() {
-        if (session == null) {
-            session = getSessionFactory().openSession();
-        }
-        return session;
-    }
-
-    public static void closeSession() {
-        if (session != null) {
-            session.close();
-        }
+        return getSessionFactory().openSession();
     }
 
     public static void closeSessionFactory() {
-        closeSession();
         if (sessionFactory != null) {
             sessionFactory.close();
         }
